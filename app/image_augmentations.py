@@ -16,7 +16,7 @@ def fliplr(image: Image):
     return image.transpose(Image.FLIP_LEFT_RIGHT)
 
 def rotate(image: Image):
-    return image.rotate(random.randint(0,365))
+    return image.rotate(random.randint(1,359))
 
 def blur(image: Image):
     #Let's handle possible failed image one after the other

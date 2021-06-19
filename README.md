@@ -17,7 +17,7 @@ Flask deployment should be at least with gunicorn allows production-case deploym
 - Add another data augmentation and test
 
 **Time of project**
-App code and deployment of working copy - 2 hours 30min
+App code and deployment of working copy -  approximately 2 hours 30min
 Most minutes spent on github actions.
 
 **Other Improvement Tasks**:
@@ -27,11 +27,12 @@ Most minutes spent on github actions.
     - If an error occured while doing augmentation
     - Image that are too big to view, just resize it to say 700 * 700
     - Image whose size is above 4MB
-      Manage this, by requesting only the header of the image url at first we can check the content lenght (if provided) before we go ahead and load the image into memory. If its size is greater than our max content lenght, just tell user to look for some smaller image to check.
+
+      To manage this, we can request only the header of the image url at first and then check the content lenght (if provided) before we go ahead and load the image into memory. If its size is greater than our max content lenght, just tell user to look for some smaller image to check.
     - Request to an image is taking long or not found
 - Give name to image augmentation shown
 - Do code scanning to ensure there is no vulnerabilities and password exposure
-- Use .snyk to ensure that libraries being used are also not vulnerable to attack.
+- Use `.snyk` to ensure that libraries being used are also not vulnerable to attack.
 - Auto include docker description in the project once your deploy. Allows us to have a **Docker hub readme** that can be updated easily once the docker deployment is done.
 
 **Observed constraints**:
