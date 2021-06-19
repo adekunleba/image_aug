@@ -3,7 +3,11 @@ services:
   app:
     image: tonytunde2012/image_aug:latest
     ports:
-      - "8000:8000"
+      - "8000:${PORT}"
+    environment:
+      - PORT=${PORT}
+      - MAX_CONTENT_LENGTH=${MAX_CONTENT_LENGTH}
+      - SEND_FILE_MAX_AGE_DEFAULT=${SEND_FILE_MAX_AGE_DEFAULT}
     restart: always
   
   watchtower:
