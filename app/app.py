@@ -1,3 +1,4 @@
+from distutils.log import error
 import io, os
 import requests
 from flask import Flask, request, render_template
@@ -15,11 +16,48 @@ app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024
 # Default route just shows simple text
 @app.route('/', methods=['GET'])
 def index():
-    image_url = request.args.get('url')
-    logging.info(image_url)
-    image_response = requests.get(image_url)
-    image = Image.open(io.BytesIO(image_response.content))
-    flipped_image = random_augmentation(image)
-    flipped_image.convert('RGB').save(os.path.join(os.getcwd(), "app/static/augmented_image.jpg"))
-    return render_template("index.html")
 
+    try:
+        image_url = request.args.get('url', None)
+        if not image_url:
+            return render_template("no_image.html")
+    
+        logging.info(image_url)
+        quick_check = requests.head(image_url)
+        
+        if quick_check.status_code != 200:
+            return render_template("error.html", error=ImageUrlNotReachable("Image url is not reachable")), quick_check.status_code
+
+        # Can we have a size that overflow max int?
+        cl = quick_check.headers.get('content-length', None)
+
+        if cl != None:
+            cl = int(cl)
+            if cl > app.config.get('MAX_CONTENT_LENGTH', 4 * 1024 * 1024):
+                logging.warn(f"Image file is too large")
+                return render_template("error.html", error=ImageSizeLarge("ImageFileSize: Image size should be less than 4MB")), 400
+
+        image_response = requests.get(image_url, timeout=60)
+
+        if image_response.status_code != 200:
+            return render_template("error.html", error=ImageUrlNotReachable("Image url is not reachable")), quick_check.status_code
+        
+        image = Image.open(io.BytesIO(image_response.content))
+        flipped_image, function_name = random_augmentation(image)
+        flipped_image.convert('RGB').save(os.path.join(os.getcwd(), "app/static/augmented_image.jpg"))
+        return render_template("index.html", aug_name=function_name)
+    
+    except Exception as err:
+        logging.warn("There was an error: ", err)
+        return render_template("error.html", error=err), 400
+
+
+class ImageSizeLarge(Exception):
+    
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+
+class ImageUrlNotReachable(Exception):
+    
+    def __init__(self, message: str) -> None:
+        super().__init__(message)

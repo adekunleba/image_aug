@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Error</title>
+    <style>
+        .tab {
+            display: inline-block;
+            margin-left: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+          <header><h2>So sorry! our server received an error</h2></header>
+              <p>
+                {{ error }}
+            </p> 
+
+            <p>
+                Kindly send this error too our devs, they will fix this asap!
+            </p> 
+
+            <p>
+                While we fix:
+            </p> 
+
+            <p>
+                <span class="tab"></span> - Check that you are using the web correctly ensure your usage is: http://app-ur/?url=image_url.png 
+            </p> 
+            <p>
+                <span class="tab"></span> - Check that the specified server url is correct.
+            </p>
+            <p>
+                <span class="tab"></span> - Check and confirm that the image url is reachable
+            </p> 
+
+            <p>
+                <span class="tab"></span> - Check that the image size is not too large we accept values less than 4MB
+            </p> 
+</body>
+</html>
