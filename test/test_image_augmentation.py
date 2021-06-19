@@ -1,7 +1,7 @@
 import unittest
 
 import numpy as np
-from app.image_augmentations import do_nothing, fliplr, rotate, blur
+from app.image_augmentations import do_nothing, fliplr, rotate, blur, random_augmentation
 from PIL import Image
 import logging
 
@@ -18,6 +18,16 @@ class TestImageAugmentation(unittest.TestCase):
         self.small_noise = np.random.randint(0, 127, self.small_image_array.shape, dtype=np.uint8)
         self.small_image_array = self.small_image_array + self.small_noise
         self.small_image =  Image.fromarray(self.small_image_array)
+
+        self.gray_image_array = np.ones((224, 224), dtype=np.uint8) * 128
+        self.gray_noise = np.random.randint(0, 127, self.gray_image_array.shape, dtype=np.uint8)
+        self.gray_image_array = self.gray_image_array + self.gray_noise
+        self.gray_image =  Image.fromarray(self.gray_image_array)
+
+        self.big_image_array = np.ones((4000, 4000, 3), dtype=np.uint8) * 128
+        self.noise = np.random.randint(0, 127, self.big_image_array.shape, dtype=np.uint8)
+        self.big_image_array = self.big_image_array + self.noise
+        self.big_image =  Image.fromarray(self.big_image_array)
 
     def test_do_nothing(self):
         aug_image = do_nothing(self.image)
@@ -58,6 +68,24 @@ class TestImageAugmentation(unittest.TestCase):
         noised = blur(self.small_image)
         array_noised = np.array(noised)
         self.assertNotEqual(array_noised.sum(), self.small_image_array.sum())
+
+        noised = blur(self.gray_image)
+        array_noised = np.array(noised)
+        self.assertNotEqual(array_noised.sum(), self.gray_image_array.sum())
+
+
+        paletized = self.image.convert('P')
+        noised = blur(paletized)
+        array_noised = np.array(noised)
+        self.assertNotEqual(array_noised.sum(), self.image_array.sum())
+
+    def test_image_resize(self):
+        aug_big_image, _ = random_augmentation(self.big_image)
+        
+        array_big_image = np.array(aug_big_image)
+        self.assertEqual(array_big_image.shape[0], 700)
+        self.assertEqual(array_big_image.shape[1], 700)
+
 
 if __name__ == '__main__':
     unittest.main()
