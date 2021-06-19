@@ -9,9 +9,9 @@ import logging
 from app.image_augmentations import random_augmentation
 
 app = Flask(__name__)
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = int(os.environ.get('SEND_FILE_MAX_AGE_DEFAULT', 0))
 # 4MB Max image size limit
-app.config['MAX_CONTENT_LENGTH'] = 4 * 1024 * 1024 
+app.config['MAX_CONTENT_LENGTH'] =  int(os.environ.get('MAX_CONTENT_LENGTH', 4 * 1024 * 1024))
 
 # Default route just shows simple text
 @app.route('/', methods=['GET'])
@@ -33,9 +33,10 @@ def index():
 
         if cl != None:
             cl = int(cl)
-            if cl > app.config.get('MAX_CONTENT_LENGTH', 4 * 1024 * 1024):
+            max_lenght = int(app.config.get('MAX_CONTENT_LENGTH', 4 * 1024 * 1024))
+            if cl > max_lenght:
                 logging.warn(f"Image file is too large")
-                return render_template("error.html", error=ImageSizeLarge("ImageFileSize: Image size should be less than 4MB")), 400
+                return render_template("error.html", error=ImageSizeLarge(f"ImageFileSize: Image size should be less than {max_lenght / (1024 * 1024)}MB")), 400
 
         image_response = requests.get(image_url, timeout=60)
 
@@ -61,3 +62,8 @@ class ImageUrlNotReachable(Exception):
     
     def __init__(self, message: str) -> None:
         super().__init__(message)
+
+
+if __name__ == '__main__':
+    # Run the server
+    app.run(host='0.0.0.0', port=8000, debug=True)
