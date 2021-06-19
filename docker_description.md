@@ -11,7 +11,7 @@ Project itself was tested with python `3.8` and `3.9` environment.
 
 #### Running the docker
 Running the docker can be in two different approaches.
-
+**RECOMMENDED**
 **A. Using a docker compose with watch_tower for continous deployment**:
 ```
 version: "3"
@@ -42,14 +42,17 @@ docker run -p 8000:8000 tonytunde2012/image_aug
 
 ```
 
-Update to v.0.0.3
+## Update to v.0.0.3
 ### Running with dynamic variable mappings.
 - Allows you to set the following as environment variables.
+
 a. PORT - Running port  of the app, but will still map to 8000 on server.
+
 b. MAX_CONTENT_LENGTH - Maximum image size allowed
+
 c. SEND_FILE_MAX_AGE_DEFAULT - Cache age of images.
 
-Ensure you set this values by `export KEY:VALUE` from command line else at most the port mapping will not work hence the compose itself won't build
+Ensure you set these values by `export KEY:VALUE` from command line else the compose itself won't build most especially because docker-compose expects a valid `PORT` values.
 
 Updated Docker compose will look like this.
 
@@ -86,4 +89,4 @@ docker run -p 8000:8000 -e KEY=VALUE tonytunde2012/image_aug
 
 ```
 
-_PS: The project has been built with the defualt allowable with v.0.0.2, Hence can decide not to use the updated compose_
+_PS: The project has been built with a default values for the image which was used in v.0.0.2, Hence you may not use the updated compose, but if the compose overrides this values, they should be supplied in the command line at least._
