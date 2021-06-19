@@ -33,7 +33,7 @@ ENV PORT=${PORT}
 
 ARG FLASK_ENV="production"
 ENV FLASK_ENV="${FLASK_ENV}" \
-    FLASK_APP="flask_app" \
+    FLASK_APP="app" \
     FLASK_SKIP_DOTENV="true" \
     PYTHONPATH="." \
     PATH="${PATH}:/home/python/.local/bin" \
