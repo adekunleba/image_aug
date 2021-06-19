@@ -50,7 +50,8 @@ The project is deployed to this [docker hub link](https://hub.docker.com/r/tonyt
 
 **Running the model using docker-hub image**
 
-Can use either of the approaches to run the project
+Can use either of the approaches to run the project:
+
 **A. Using a docker compose with watch_tower for continous deployment**:
 ```
 version: "3"
@@ -83,7 +84,9 @@ docker run -p 8000:8000 tonytunde2012/image_aug
 
 **Running the application**
 The application runs on port 8000 in your deployment server.
+
 Retrieving an image augmentation is by making a request like this:
 http://0.0.0.0:8000/?url=<image_url>
+
 for example:
 http://0.0.0.0:8000/?url=https://imgs.xkcd.com/comics/bad_code.png
